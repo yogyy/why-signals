@@ -1,7 +1,7 @@
 import "./style.css";
 import javascriptLogo from "./javascript.svg";
 import viteLogo from "/vite.svg";
-import { obeservable } from "./observable.js";
+import { effect, signal } from "./signals.js";
 
 document.querySelector("#app").innerHTML = `
   <div>
@@ -22,14 +22,16 @@ document.querySelector("#app").innerHTML = `
 `;
 
 const btn = document.querySelector("#counter");
+let count = signal(0);
 
-let count = obeservable(0);
-let double;
+effect(() => {
+  btn.innerHTML = `count is ${count.value}`;
+});
 
-count.subscribe((count) => (btn.innerHTML = `count is ${count}`));
-
-const unsubs = count.subscribe((count) => console.log(count));
-
-unsubs();
-
-btn.addEventListener("mouseenter", () => count.increment());
+effect(() => {
+  if (count.value > 10) {
+    console.error("value too high");
+    count.value = 0;
+  }
+});
+btn.addEventListener("mouseenter", () => count.value++);
