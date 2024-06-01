@@ -1,7 +1,7 @@
 import "./style.css";
 import javascriptLogo from "./javascript.svg";
 import viteLogo from "/vite.svg";
-import { setupCounter } from "./counter.js";
+import { obeservable } from "./observable.js";
 
 document.querySelector("#app").innerHTML = `
   <div>
@@ -13,7 +13,7 @@ document.querySelector("#app").innerHTML = `
     </a>
     <h1>Hello Vite!</h1>
     <div class="card">
-      <button id="counter" type="button"></button>
+      <button id="counter" type="button">count is 0</button>
     </div>
     <p class="read-the-docs">
       Click on the Vite logo to learn more
@@ -21,4 +21,15 @@ document.querySelector("#app").innerHTML = `
   </div>
 `;
 
-setupCounter(document.querySelector("#counter"));
+const btn = document.querySelector("#counter");
+
+let count = obeservable(0);
+let double;
+
+count.subscribe((count) => (btn.innerHTML = `count is ${count}`));
+
+const unsubs = count.subscribe((count) => console.log(count));
+
+unsubs();
+
+btn.addEventListener("mouseenter", () => count.increment());
